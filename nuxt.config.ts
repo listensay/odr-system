@@ -12,5 +12,10 @@ export default defineNuxtConfig({
   ],
   css: [
     '/assets/main.css'
-  ]
+  ],
+  runtimeConfig: {
+    public: {
+      api_url: process.env.API_URL
+    }
+  }
 })
