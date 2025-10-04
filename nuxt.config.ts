@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
-    'nuxt-quasar-ui'
+    'nuxt-quasar-ui',
+    'dayjs-nuxt'
   ],
   css: [
     '/assets/main.css'
