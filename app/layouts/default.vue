@@ -14,8 +14,10 @@ const leftDrawerOpen = ref(false)
       </q-drawer>
 
       <q-page-container>
-        <slot/>
+        <div class="h-full flex flex-col">
+          <slot/>
+        </div>
       </q-page-container>
     </q-layout>
-  </div>
-</template>
+    </div>
+  </template>
