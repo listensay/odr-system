@@ -18,5 +18,10 @@ export default defineNuxtConfig({
     public: {
       api_url: process.env.API_URL
     }
-  }
+  },
+  nitro: {
+    devProxy: {
+      '/api': process.env.API_URL
+    }
+  },
 })

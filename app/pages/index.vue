@@ -4,7 +4,7 @@ import useUserStore from '~/stores/users';
 
 const userStore = useUserStore()
 await userStore.getData()
-const { list } = storeToRefs(userStore)
+const { list, loading } = storeToRefs(userStore)
 
 // 搜索
 const searchText = ref('')
@@ -22,13 +22,16 @@ const columns = [
 
 // 多选表格
 const selected = ref([])
-const getSelectedString = () => {
-  return selected.value.length === 0 ? '' : `${selected.value.length} record${selected.value.length > 1 ? 's' : ''} selected of ${list.value.length}`
+
+const handleBatchDelete = async () => {
+  const ids = selected.value.map(item => item.id)
+  await userStore.delDatas(ids)
 }
 </script>
 
 <template>
   <div>
+    <q-inner-loading :showing="loading" class="absolute z-[999]" />
     <div class="q-pa-md">
       <!-- 工具栏 -->
       <div class="row q-mb-md q-gutter-sm">
@@ -67,9 +70,9 @@ const getSelectedString = () => {
         :rows="list"
         :columns="columns"
         row-key="id"
-        :selected-rows-label="getSelectedString"
         selection="multiple"
       >
+
         <template #body-cell-avatar="props">
           <q-td :props="props">
             <q-avatar>
@@ -91,25 +94,21 @@ const getSelectedString = () => {
         </template>
 
         <template #body-cell-actions="props">
-          <q-td :props="props">
-            <div class="flex justify-center gap-2">
-              <q-btn
-                dense
-                color="primary"
-                icon="edit"
-                @click="handleEdit(props.row)"
-              >
-                编辑
-              </q-btn>
-              <q-btn
-                dense
-                color="negative"
-                icon="delete"
-                @click="handleDelete(props.row)"
-              >
-                删除
-              </q-btn>
-            </div>
+          <q-td :props="props" style="width: 200px;">
+            <q-btn
+              flat
+              color="primary"
+              @click="handleEdit(props.row)"
+            >
+              编辑
+            </q-btn>
+            <q-btn
+              flat
+              color="negative"
+              @click="handleDelete(props.row)"
+            >
+              删除
+            </q-btn>
           </q-td>
         </template>
       </q-table>

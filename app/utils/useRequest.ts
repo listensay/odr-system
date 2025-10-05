@@ -1,6 +1,6 @@
 export const useRequest = async (url: string, options?: any) => {
   try {
-    const reqUrl = useRuntimeConfig().public.api_url + url
+    const reqUrl = url
 
     // 可以设置默认headers例如
     const customHeaders = {

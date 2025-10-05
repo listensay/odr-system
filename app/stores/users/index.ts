@@ -7,9 +7,12 @@ const useUserStore = defineStore('users', () => {
   const pageSize = ref(10)
   const total = ref(0)
   const totalPages = ref(0)
+  const loading = ref(false)
 
+  // 获取列表数据
   const getData = async ()  => {
-    const result = <IResponse<ListData<TUsers>>> await useRequestGet('/users')
+    loading.value = true
+    const result = <IResponse<ListData<TUsers>>> await useRequestGet('/api/users')
     if(result) {
       list.value = result.data.list
       currentPage.value = result.data.currentPage
@@ -17,6 +20,16 @@ const useUserStore = defineStore('users', () => {
       total.value = result.data.total
       totalPages.value = result.data.totalPages
     }
+    loading.value = false
+  }
+
+  // 删除数据
+  const delDatas = async (ids: number[]) => {
+    loading.value = true
+    await useRequestDelete('/api/users', {
+      ids: [...ids]
+    })
+    await getData()
   }
 
   return {
@@ -25,7 +38,9 @@ const useUserStore = defineStore('users', () => {
     currentPage,
     pageSize,
     total,
-    totalPages
+    totalPages,
+    delDatas,
+    loading
   }
 })
 
