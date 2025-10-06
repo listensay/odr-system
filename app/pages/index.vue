@@ -4,7 +4,8 @@ import useUserStore from '~/stores/users';
 
 const userStore = useUserStore()
 await userStore.getData()
-const { list, loading } = storeToRefs(userStore)
+
+const { list, loading, page, totalPages } = storeToRefs(userStore)
 
 // 搜索
 const searchText = ref('')
@@ -26,6 +27,7 @@ const selected = ref([])
 const handleBatchDelete = async () => {
   const ids = selected.value.map(item => item.id)
   await userStore.delDatas(ids)
+  selected.value = []
 }
 </script>
 
@@ -71,6 +73,9 @@ const handleBatchDelete = async () => {
         :columns="columns"
         row-key="id"
         selection="multiple"
+        hide-pagination
+        hide-bottom
+        rows-per-page-options="0"
       >
 
         <template #body-cell-avatar="props">
@@ -112,6 +117,13 @@ const handleBatchDelete = async () => {
           </q-td>
         </template>
       </q-table>
+      <div class="q-pa-lg flex flex-center">
+        <q-pagination
+            v-model="page"
+            :max="totalPages"
+            boundary-links
+          />
+      </div>
     </div>
   </div>
 </template>

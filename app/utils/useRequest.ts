@@ -1,6 +1,9 @@
 export const useRequest = async (url: string, options?: any) => {
   try {
-    const reqUrl = url
+    // 服务端使用完整 URL，客户端使用相对路径
+    const reqUrl = import.meta.server
+      ? `http://localhost:8080${url}`
+      : url
 
     // 可以设置默认headers例如
     const customHeaders = {
@@ -9,10 +12,15 @@ export const useRequest = async (url: string, options?: any) => {
 
     let body
 
-    const { data } = await useFetch(reqUrl, {
-      ...options,
-      headers: customHeaders,
-      watch: false,
+    const { data } = await useAsyncData(reqUrl, 
+      () => $fetch(reqUrl, {
+        ...options,
+        headers: customHeaders,
+        watch: false,
+        key: url + Date.now(),
+      })
+      ,{
+        server: true
 
       // onResponseError({ response }) {
       //   switch (response.status) {

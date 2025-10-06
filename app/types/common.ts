@@ -7,7 +7,7 @@ export interface IResponse<T = unknown> {
 
 export interface ListData<T = unknown> {
   list: T[];
-  currentPage: number;
+  page: 1,
   pageSize: number;
   total: number;
   totalPages: number;

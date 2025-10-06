@@ -3,20 +3,24 @@ import type { TUsers } from "./types"
 
 const useUserStore = defineStore('users', () => {
   const list: Ref<TUsers[]> = ref([])
-  const currentPage = ref(1)
+  const page = ref(1)
   const pageSize = ref(10)
   const total = ref(0)
-  const totalPages = ref(0)
+  const totalPages = ref(1)
   const loading = ref(false)
+
 
   // 获取列表数据
   const getData = async ()  => {
     loading.value = true
-    const result = <IResponse<ListData<TUsers>>> await useRequestGet('/api/users')
+    const result = <IResponse<ListData<TUsers>>> await useRequestGet('/api/users', {
+      page: page.value,
+      pageSize: pageSize.value
+    })
     if(result) {
       list.value = result.data.list
-      currentPage.value = result.data.currentPage
-      pageSize.value = result.data.pageSize
+      page.value = Number(result.data.page)
+      pageSize.value = Number(result.data.pageSize)
       total.value = result.data.total
       totalPages.value = result.data.totalPages
     }
@@ -32,10 +36,14 @@ const useUserStore = defineStore('users', () => {
     await getData()
   }
 
+  watch([page, pageSize], async () => {
+    await getData()
+  })
+
   return {
     getData,
     list,
-    currentPage,
+    page,
     pageSize,
     total,
     totalPages,

@@ -19,9 +19,14 @@ export default defineNuxtConfig({
       api_url: process.env.API_URL
     }
   },
-  nitro: {
-    devProxy: {
-      '/api': process.env.API_URL
+  vite: {
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true
+        }
+      }
     }
   },
 })
